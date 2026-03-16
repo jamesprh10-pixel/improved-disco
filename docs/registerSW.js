@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/improved-disco/sw.js', { scope: '/improved-disco/' })})}
