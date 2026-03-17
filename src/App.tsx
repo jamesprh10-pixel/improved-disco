@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { Screen } from './types';
+import type { Screen, PuzzleType } from './types';
 import { useSettings } from './hooks/useSettings';
 import { useWorkout } from './hooks/useWorkout';
 import { WelcomeScreen } from './components/WelcomeScreen';
@@ -8,6 +8,7 @@ import { ActiveWorkout } from './components/ActiveWorkout';
 import { ExerciseSearch } from './components/ExerciseSearch';
 import { ExerciseHistory } from './components/ExerciseHistory';
 import { WorkoutSummary } from './components/WorkoutSummary';
+import { CubeTimer } from './components/cube/CubeTimer';
 
 export default function App() {
   const { settings, updateSettings } = useSettings();
@@ -85,6 +86,7 @@ export default function App() {
       return (
         <HomeScreen
           onStartWorkout={handleStartWorkout}
+          onOpenCubeTimer={() => setScreen({ type: 'cube-puzzle-select' })}
           settings={settings!}
         />
       );
@@ -104,6 +106,7 @@ export default function App() {
       ) : (
         <HomeScreen
           onStartWorkout={handleStartWorkout}
+          onOpenCubeTimer={() => setScreen({ type: 'cube-puzzle-select' })}
           settings={settings!}
         />
       );
@@ -134,6 +137,44 @@ export default function App() {
           workout={screen.workout}
           unit={unit}
           onDone={() => setScreen({ type: 'home' })}
+        />
+      );
+
+    case 'cube-puzzle-select':
+      return (
+        <div className="flex flex-col min-h-dvh">
+          <header className="flex items-center gap-3 px-5 pt-6 pb-4">
+            <button
+              onClick={() => setScreen({ type: 'home' })}
+              className="text-text-secondary text-lg active:text-white p-1 -m-1"
+            >
+              ←
+            </button>
+            <h1 className="text-2xl font-bold text-white">Cube Timer</h1>
+          </header>
+          <div className="px-5 grid grid-cols-2 gap-4 mt-4">
+            {(['2x2', '3x3', '4x4', 'pyraminx'] as PuzzleType[]).map(p => (
+              <button
+                key={p}
+                onClick={() => setScreen({ type: 'cube-timer', puzzle: p })}
+                className="flex flex-col items-center justify-center gap-2 py-8 rounded-xl bg-surface
+                           active:bg-border transition-colors text-white"
+              >
+                <span className="text-4xl">{p === 'pyraminx' ? '🔺' : '🔲'}</span>
+                <span className="font-semibold text-lg">
+                  {p === 'pyraminx' ? 'Pyraminx' : p === '2x2' ? '2×2' : p === '3x3' ? '3×3' : '4×4'}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      );
+
+    case 'cube-timer':
+      return (
+        <CubeTimer
+          puzzle={screen.puzzle}
+          onBack={() => setScreen({ type: 'cube-puzzle-select' })}
         />
       );
   }

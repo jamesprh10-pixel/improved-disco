@@ -1,4 +1,4 @@
-import type { Workout, PersonalRecord, UserSettings } from './types';
+import type { Workout, PersonalRecord, UserSettings, Solve, PuzzleType } from './types';
 
 const KEYS = {
   workouts: 'lastrep_workouts',
@@ -106,4 +106,33 @@ export function getUserExerciseNames(): string[] {
 // ID generator
 export function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+
+// Cube solves
+function cubeKey(puzzle: PuzzleType): string {
+  return `cube_solves_${puzzle}`;
+}
+
+export function getCubeSolves(puzzle: PuzzleType): Solve[] {
+  return read<Solve[]>(cubeKey(puzzle), []);
+}
+
+export function saveCubeSolves(puzzle: PuzzleType, solves: Solve[]): void {
+  write(cubeKey(puzzle), solves);
+}
+
+export function addCubeSolve(solve: Solve): void {
+  const solves = getCubeSolves(solve.puzzle);
+  solves.unshift(solve);
+  saveCubeSolves(solve.puzzle, solves);
+}
+
+export function deleteCubeSolve(id: string, puzzle: PuzzleType): void {
+  const solves = getCubeSolves(puzzle).filter(s => s.id !== id);
+  saveCubeSolves(puzzle, solves);
+}
+
+export function updateCubeSolve(solve: Solve): void {
+  const solves = getCubeSolves(solve.puzzle).map(s => s.id === solve.id ? solve : s);
+  saveCubeSolves(solve.puzzle, solves);
 }

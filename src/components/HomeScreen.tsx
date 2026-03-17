@@ -3,10 +3,11 @@ import type { UserSettings } from '../types';
 
 interface Props {
   onStartWorkout: () => void;
+  onOpenCubeTimer: () => void;
   settings: UserSettings;
 }
 
-export function HomeScreen({ onStartWorkout, settings }: Props) {
+export function HomeScreen({ onStartWorkout, onOpenCubeTimer, settings }: Props) {
   const workouts = getWorkouts().slice(0, 5);
 
   const formatDate = (ts: number) => {
@@ -32,6 +33,14 @@ export function HomeScreen({ onStartWorkout, settings }: Props) {
                      active:bg-accent-hover transition-colors min-h-[56px]"
         >
           Start Workout
+        </button>
+
+        <button
+          onClick={onOpenCubeTimer}
+          className="w-full py-4 rounded-xl bg-surface text-white text-lg font-semibold
+                     active:bg-border transition-colors min-h-[56px] mt-3 flex items-center justify-center gap-2"
+        >
+          <span>🔲</span> Cube Timer
         </button>
 
         {workouts.length > 0 && (
