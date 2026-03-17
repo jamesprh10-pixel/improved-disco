@@ -33,10 +33,24 @@ export interface UserSettings {
   onboardingComplete: boolean;
 }
 
+export type PuzzleType = '2x2' | '3x3' | '4x4' | 'pyraminx';
+
+export interface Solve {
+  id: string;
+  time: number;
+  scramble: string;
+  puzzle: PuzzleType;
+  timestamp: number;
+  dnf?: boolean;
+  plusTwo?: boolean;
+}
+
 export type Screen =
   | { type: 'welcome' }
   | { type: 'home' }
   | { type: 'workout' }
   | { type: 'exercise-search' }
   | { type: 'exercise-history'; exerciseName: string }
-  | { type: 'summary'; workout: Workout };
+  | { type: 'summary'; workout: Workout }
+  | { type: 'cube-puzzle-select' }
+  | { type: 'cube-timer'; puzzle: PuzzleType };
